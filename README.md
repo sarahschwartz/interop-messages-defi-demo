@@ -17,6 +17,7 @@ On the first deposit, the user's address is encoded and sent as a message.
 The token contract allows users to mint some tokens if they can verify that they have previously deposited any value using one of the approved staking contracts.
 The approved staking contract addresses are defined in the constructor function.
 Users can only call the mint function once.
+The token contract will also track the number of mints for each chain.
 
 ### Install Dependencies
 
