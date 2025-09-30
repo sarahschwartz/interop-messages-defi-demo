@@ -3,6 +3,10 @@
 This repo contains smart contracts and a frontend to test sending and verifying interop messages.
 It demonstrates a defi-based use case for interop messages using [ZKsync Connect](https://docs.zksync.io/zksync-network/unique-features/zksync-connect).
 
+## Environment Setup
+
+Follow the instructions in the [ZKsync docs](https://docs.zksync.io/zk-stack/running/gateway-settlement-layer) to setup a multichain environment with a gateway chain and 3 other chains migrated to gateway.
+
 ## Contracts
 
 There are two smart contracts: `Staking.sol` and `InteropToken.sol`.
@@ -30,6 +34,12 @@ bun hardhat keystore set WALLET_PRIVATE_KEY
 ```
 
 For a local zkstack chain, you can set this to `0x7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110`.
+Make sure this address has some funds on each network (except Gateway).
+You can send funds to the wallet using the `zkstack dev rich-account` command:
+
+```bash
+zkstack dev rich-account --chain zk_chain_1
+```
 
 Then set the RPC urls for three chains plus ZKsync Gateway in `hardhat.config.ts`.
 For local zkstack chains, you can find these values at `<YOUR_ECOSYSTEM>/chain/<CHAIN_NAME>/configs/general.yaml`.
@@ -113,7 +123,11 @@ Open the frontend at [`http://localhost:5173/`](http://localhost:5173/).
 
 On the frontend, you should be able to add each network to your wallet by clicking on them.
 
-You can send funds to your wallet using the same `dev
+You can send funds to your wallet using the `zkstack dev rich-account` command:
+
+```bash
+zkstack dev rich-account --chain zk_chain_1 0x<YOUR_WALLET_ADDRESS>
+```
 
 Now you can test the staking and tokens contracts with the frontend.
 On a staking chain, deposit some amount and then copy your transaction hash.
