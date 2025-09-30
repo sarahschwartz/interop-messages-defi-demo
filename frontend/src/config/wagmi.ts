@@ -12,8 +12,8 @@ export const rewardsChain = defineChain({
   },
   rpcUrls: {
     default: {
-      http: ['http://localhost:3450/'],
-      webSocket: ['ws://localhost:3451/'],
+      http: ['http://localhost:3350/'],
+      webSocket: ['ws://localhost:3351/'],
     },
   },
 })
@@ -35,7 +35,7 @@ export const stakingChain1 = defineChain({
 })
 
 export const stakingChain2 = defineChain({
-  id: 5321,
+  id: 5328,
   name: 'Staking Chain 2',
   nativeCurrency: {
     decimals: 18,
@@ -44,8 +44,8 @@ export const stakingChain2 = defineChain({
   },
   rpcUrls: {
     default: {
-      http: ['http://localhost:3350/'],
-      webSocket: ['ws://localhost:3351/'],
+      http: ['http://localhost:3250/'],
+      webSocket: ['ws://localhost:3251/'],
     },
   },
 })
