@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import {
   useWriteContract,
   useWaitForTransactionReceipt,
@@ -13,7 +13,7 @@ import {
   stakingChain2,
 } from "../config/wagmi";
 import { TOKEN_CONTRACT_ADDRESS } from "../config/constants";
-import { Coins, Loader2, CheckCircle, XCircle } from "lucide-react";
+import { Coins, CheckCircle, XCircle } from "lucide-react";
 import { Abi } from "viem";
 import TOKEN_JSON from "../../../contracts/artifacts/contracts/InteropToken.sol/InteropToken.json";
 import { Provider } from "zksync-ethers";
@@ -24,15 +24,19 @@ import {
 } from "../utils/prove";
 import { Status } from "./Status";
 
-export default function MintForm() {
+export default function MintForm({
+  update,
+}: {
+  update: Dispatch<SetStateAction<number>>;
+}) {
   const { address, chain } = useAccount();
   const [chainId, setChainId] = useState<number>(stakingChain1.id);
   const [txHash, setTxHash] = useState<string>("");
   const [isSubmitPending, setIsSubmitPending] = useState<boolean>(false);
   const [isFinalized, setIsFinalized] = useState<boolean>(false);
   const [isRootUpdated, setIsRootUpdated] = useState<boolean>(false);
-  const { writeContract, isPending, data: hash } = useWriteContract();
-  const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({
+  const { writeContract, data: hash, isError } = useWriteContract();
+  const { isSuccess } = useWaitForTransactionReceipt({
     hash,
   });
 
@@ -41,10 +45,14 @@ export default function MintForm() {
   const { data: tokenData } = useReadContract({
     address: TOKEN_CONTRACT_ADDRESS,
     abi: TOKEN_JSON.abi as Abi,
-    functionName: "balanceOf",
+    functionName: "addressesThatMinted",
     chainId: rewardsChain.id,
-    args: [address]
+    args: [address],
   });
+
+  useEffect(() => {
+    update((prev) => prev + 1);
+  }, [isSuccess]);
 
   const isCorrectChain = thisChainId === rewardsChain.id;
 
@@ -64,7 +72,8 @@ export default function MintForm() {
     const provider = new Provider(chain.rpcUrls.default.http[0]);
     const status = await checkIfTxIsFinalized(txHash, provider);
     if (status !== "EXECUTED") {
-      alert("tx not fully executed");
+      alert("Deposit txn is not yet finalized.");
+      setIsSubmitPending(false);
       return;
     }
     setIsFinalized(true);
@@ -96,7 +105,7 @@ export default function MintForm() {
       </div>
     );
   }
-  if (tokenData && typeof tokenData === "bigint" && tokenData > 0n) {
+  if (tokenData) {
     return (
       <div className="text-center py-8">
         <CheckCircle className="h-12 w-12 text-green-600 mx-auto mb-4" />
@@ -109,33 +118,37 @@ export default function MintForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div>
-        <label
-          htmlFor="txn-hash"
-          className="block text-sm font-medium text-purple-200 mb-2"
-        >
-          Token Amount
-        </label>
-        <input
-          id="txn-hash"
-          type="text"
-          value={txHash}
-          onChange={(e) => setTxHash(e.target.value)}
-          placeholder="0x..."
-          className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-purple-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200"
-        />
+      {!isSubmitPending && (
+        <div>
+          <label
+            htmlFor="txn-hash"
+            className="block text-sm font-medium text-purple-200 mb-2"
+          >
+            Token Amount
+          </label>
+          <input
+            id="txn-hash"
+            type="text"
+            value={txHash}
+            onChange={(e) => setTxHash(e.target.value)}
+            placeholder="0x..."
+            className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-purple-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200"
+          />
 
-        <label className="block text-sm font-medium text-purple-200 my-2">Staking Chain:</label>
-        <select
-          id="selectedStakingChain"
-          name="selectedStakingChain"
-          onChange={(e) => setChainId(Number(e.target.value))}
-          className="flex items-center space-x-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl px-4 py-2 text-white hover:bg-white/20 transition-all duration-200"
-        >
-          <option value={stakingChain1.id}>{stakingChain1.name}</option>
-          <option value={stakingChain2.id}>{stakingChain2.name}</option>
-        </select>
-      </div>
+          <label className="block text-sm font-medium text-purple-200 my-2">
+            Staking Chain:
+          </label>
+          <select
+            id="selectedStakingChain"
+            name="selectedStakingChain"
+            onChange={(e) => setChainId(Number(e.target.value))}
+            className="flex items-center space-x-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl px-4 py-2 text-white hover:bg-white/20 transition-all duration-200"
+          >
+            <option value={stakingChain1.id}>{stakingChain1.name}</option>
+            <option value={stakingChain2.id}>{stakingChain2.name}</option>
+          </select>
+        </div>
+      )}
 
       <div className="text-white">
         {isSubmitPending && (
@@ -161,40 +174,28 @@ export default function MintForm() {
         {isRootUpdated && (
           <Status
             isLoading={!isSuccess}
-            text={isSuccess ? "Token Minted" : "Minting token"}
+            text={
+              isError
+                ? "Error minting token"
+                : isSuccess
+                ? "Token Minted"
+                : "Minting token"
+            }
           />
         )}
       </div>
 
-      <button
-        type="submit"
-        disabled={!txHash || isSubmitPending || isPending || isConfirming || isSuccess}
-        className="w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 disabled:from-gray-500 disabled:to-gray-600 text-white px-6 py-3 rounded-xl font-medium transition-all duration-200 transform hover:scale-105 disabled:scale-100 disabled:cursor-not-allowed"
-      >
-        {isPending || isConfirming ? (
-          <>
-            <Loader2 className="h-5 w-5 animate-spin" />
-            <span>{isPending ? "Confirming..." : "Processing..."}</span>
-          </>
-        ) : isSuccess ? (
-          <>
-            <CheckCircle className="h-5 w-5" />
-            <span>Success!</span>
-          </>
-        ) : (
+      {!isSubmitPending && (
+        <button
+          type="submit"
+          disabled={!txHash}
+          className="w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 disabled:from-gray-500 disabled:to-gray-600 text-white px-6 py-3 rounded-xl font-medium transition-all duration-200 transform hover:scale-105 disabled:scale-100 disabled:cursor-not-allowed"
+        >
           <>
             <Coins className="h-5 w-5" />
             <span>Mint Tokens</span>
           </>
-        )}
-      </button>
-
-      {hash && (
-        <div className="text-center">
-          <p className="text-sm text-purple-200">
-            Transaction: {hash.slice(0, 10)}...{hash.slice(-8)}
-          </p>
-        </div>
+        </button>
       )}
     </form>
   );

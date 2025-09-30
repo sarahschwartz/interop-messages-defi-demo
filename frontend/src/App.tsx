@@ -1,16 +1,18 @@
 import { useAccount, useSwitchChain } from 'wagmi'
 import WalletConnect from './components/WalletConnect'
 import ChainSwitcher from './components/ChainSwitcher'
-import DepositForm from './components/DepositForm'
 import MintForm from './components/MintForm'
-import { Wallet, CircleDollarSign, Coins } from 'lucide-react'
+import { Wallet, CircleDollarSign, Coins, Star } from 'lucide-react'
 import { rewardsChain } from './config/wagmi'
 import { useState } from 'react'
+import { LeaderboardTable } from './components/LeaderboardTable'
+import Staking from './components/Staking'
 
 function App() {
   const { isConnected, chain } = useAccount();
   const { chains } = useSwitchChain();
-    const [show, setShow] = useState(false);
+  const [updateNum, setUpdateNum] = useState(0);
+  const [show, setShow] = useState(false);
   const isOnSupportedChain = chains.some((c) => c.id === chain?.id);
 
   function copy(hash: string) {
@@ -65,19 +67,9 @@ function App() {
           ) : (
               <div className="grid max-w-[820px] gap-8 mx-auto my-20">
                 {chain.id !== rewardsChain.id ? (
-                <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20">
-                  <div className="flex items-center space-x-3 mb-6">
-                    <div className="p-2 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg">
-                      <Coins className="h-6 w-6 text-white" />
-                    </div>
-                    <h3 className="text-2xl font-bold text-white">Staking</h3>
-                  </div>
-                  <p className="text-purple-200 mb-6">
-                    Deposit ETH to a staking contract
-                  </p>
-                  <DepositForm chainId={chain.id} copy={copy} />
-                </div>
+                  <Staking chainId={chain.id} copy={copy}/>
                 ) : (
+                  <>
                 <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20">
                   <div className="flex items-center space-x-3 mb-6">
                     <div className="p-2 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-lg">
@@ -85,11 +77,18 @@ function App() {
                     </div>
                     <h3 className="text-2xl font-bold text-white">Mint Rewards</h3>
                   </div>
-                  <p className="text-purple-200 mb-6">
-                    Mint reward token
-                  </p>
-                  <MintForm />
+                  <MintForm update={setUpdateNum}/>
                 </div>
+                <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20">
+                  <div className="flex items-center space-x-3 mb-6">
+                    <div className="p-2 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-lg">
+                      <Star className="h-6 w-6 text-white" />
+                    </div>
+                    <h3 className="text-2xl font-bold text-white">All Rewards by Chain</h3>
+                  </div>
+                  <LeaderboardTable update={updateNum} />
+                </div>
+                </>
               )}
               </div>
           )}
@@ -98,7 +97,7 @@ function App() {
           </div>
         </main>
         <div className="w-100 grid place-items-center">
-        <div id="toast" className={show ? "show" : ""}>
+        <div id="toast" className={show ? "show space-x-2 bg-white/20 backdrop-blur-md border border-white/20 rounded-xl px-4 py-2 text-white" : ""}>
           Copied tx hash to clipboard
         </div>
         </div>

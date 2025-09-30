@@ -19,11 +19,11 @@ contract Staking {
     function deposit() external payable {
         Deposit memory lastDeposit = deposits[msg.sender];
         deposits[msg.sender].amount = lastDeposit.amount + msg.value;
-        //  if (lastDeposit.madeFirstDeposit != true) {
-            // deposits[msg.sender].madeFirstDeposit = true;
+        if (lastDeposit.madeFirstDeposit != true) {
+            deposits[msg.sender].madeFirstDeposit = true;
             bytes memory message = abi.encode(deposits[msg.sender].amount);
             L1Messenger.sendToL1(message);
-        // }
+        }
     }
 
     function withdraw() external {

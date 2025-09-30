@@ -11,13 +11,17 @@ let status: "QUEUED" | "SENDING" | "PROVING" | "EXECUTED" | "FAILED" | "REJECTED
     message: "No details available";
 } = "QUEUED";
 const deadline = Date.now() + timeoutMs;
+let firstCheck = false;
   while (status !== "EXECUTED" && Date.now() < deadline) {
-    await utils.sleep(20000);
     status = await interopClient.getMessageStatus(
       provider,
       txHash as `0x${string}`
     );
-    console.log("Status:", status);
+    if(!firstCheck){ 
+      firstCheck = true;
+    } else {
+      await utils.sleep(20000);
+    }
   }
   return status;
 }
