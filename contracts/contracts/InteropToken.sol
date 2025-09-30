@@ -66,6 +66,8 @@ contract InteropToken is ERC20, Ownable {
             _proof
         );
         require(result == true, "Message not verified");
+        address sender = abi.decode(_l2MessageData.data, (address));
+        require(sender == msg.sender, "Message sender is not depositor");
         rewardsByChain[_sourceChainId]++;
         if (rewardsByChain[_sourceChainId] > rewardsByChain[winningChainId]) {
             winningChainId = _sourceChainId;

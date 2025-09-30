@@ -17,11 +17,12 @@ contract Staking {
     mapping(address => Deposit) public deposits;
 
     function deposit() external payable {
+        require(msg.value > 0, "no amount deposited");
         Deposit memory lastDeposit = deposits[msg.sender];
         deposits[msg.sender].amount = lastDeposit.amount + msg.value;
         if (lastDeposit.madeFirstDeposit != true) {
             deposits[msg.sender].madeFirstDeposit = true;
-            bytes memory message = abi.encode(deposits[msg.sender].amount);
+            bytes memory message = abi.encode(msg.sender);
             L1Messenger.sendToL1(message);
         }
     }

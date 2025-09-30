@@ -1,8 +1,18 @@
 # Interop Messages Defi Demo
 
 This repo contains smart contracts and a frontend to test sending and verifying interop messages.
+It demonstrates a defi-based use case for interop messages using [ZKsync Connect](https://docs.zksync.io/zksync-network/unique-features/zksync-connect).
 
 ## Contracts
+
+There are two smart contracts: `Staking.sol` and `InteropToken.sol`.
+
+The staking contract allows anyone to deposit and withdraw funds.
+On the first deposit, the user's address is encoded and sent as a message.
+
+The token contract allows users to mint some tokens if they can verify that they have previously deposited any value using one of the approved staking contracts.
+The approved staking contract addresses are defined in the constructor function.
+Users can only call the mint function once.
 
 ### Install Dependencies
 
@@ -62,7 +72,17 @@ Then test that everything works by running the script:
 bun interop
 ```
 
-You should see the winning chain switch from the ID of the first game chain to the ID of the second game chain.
+You should see an output similar to this:
+
+```bash
+TX HASH 0x...
+status QUEUED
+status PROVING
+status EXECUTED
+interop root is updated 0x...
+canVerify true
+tokenBalance 1n
+```
 
 ## Running the frontend
 
@@ -91,11 +111,11 @@ bun dev
 
 Open the frontend at [`http://localhost:5173/`](http://localhost:5173/).
 
-In your browser wallet import the account that we used for testing.
-The private key for this can be found in any of the `contracts/scripts` files.
-
 On the frontend, you should be able to add each network to your wallet by clicking on them.
 
-Now you can test the game with the frontend.
-On a game chain, increment your score, then copy your transaction ID.
-On the leaderboard chain, input the transaction ID and your score, then submit them to prove the score on the leaderboard chain.
+You can send funds to your wallet using the same `dev
+
+Now you can test the staking and tokens contracts with the frontend.
+On a staking chain, deposit some amount and then copy your transaction hash.
+On the rewards chain, input the transaction hash and select the staking chain you used.
+Then click the mint button to mint a token.
