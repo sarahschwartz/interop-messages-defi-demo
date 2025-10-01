@@ -58,41 +58,7 @@ export default function MintForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!txHash || !chainId) {
-      alert("missing tx hash");
-      return;
-    }
-    const chain = getChainInfo(chainId);
-    const stakingContractAddress = getContractAddress(chainId);
-    if (!chain || !stakingContractAddress) {
-      alert("Staking chain not supported");
-      return;
-    }
-    setIsSubmitPending(true);
-    const provider = new Provider(chain.rpcUrls.default.http[0]);
-    const status = await checkIfTxIsFinalized(txHash, provider);
-    if (status !== "EXECUTED") {
-      alert("Deposit txn is not yet finalized.");
-      setIsSubmitPending(false);
-      return;
-    }
-    setIsFinalized(true);
-    await updateLocalChainInteropRoot(txHash, provider);
-    setIsRootUpdated(true);
-    const args = await getProveScoreArgs(txHash, provider);
-
-    writeContract({
-      address: TOKEN_CONTRACT_ADDRESS,
-      abi: TOKEN_JSON.abi as Abi,
-      functionName: "mint",
-      args: [
-        args.srcChainId,
-        args.l1BatchNumber,
-        args.l2MessageIndex,
-        args.msgData,
-        args.gatewayProof,
-      ],
-    });
+    console.log("minting...")
   };
 
   if (!isCorrectChain) {
