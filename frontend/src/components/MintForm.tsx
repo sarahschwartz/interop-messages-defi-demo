@@ -90,7 +90,7 @@ export default function MintForm({
             htmlFor="txn-hash"
             className="block text-sm font-medium text-purple-200 mb-2"
           >
-            Token Amount
+            Transaction Hash
           </label>
           <input
             id="txn-hash"
