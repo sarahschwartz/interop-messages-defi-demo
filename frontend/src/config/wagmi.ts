@@ -2,22 +2,6 @@ import { http, createConfig } from '@wagmi/core';
 import { defineChain } from 'viem';
 import { TOKEN_CONTRACT_ADDRESS, STAKING_CHAIN_1_CONTRACT_ADDRESS, STAKING_CHAIN_2_CONTRACT_ADDRESS } from './constants';
 
-export const rewardsChain = defineChain({
-  id: 37427,
-  name: 'Rewards Chain',
-  nativeCurrency: {
-    decimals: 18,
-    name: 'Ether',
-    symbol: 'ETH',
-  },
-  rpcUrls: {
-    default: {
-      http: ['http://localhost:3450/'],
-      webSocket: ['ws://localhost:3451/'],
-    },
-  },
-})
-
 export const stakingChain1 = defineChain({
   id: 34234,
   name: 'Staking Chain 1',
@@ -46,6 +30,23 @@ export const stakingChain2 = defineChain({
     default: {
       http: ['http://localhost:3350/'],
       webSocket: ['ws://localhost:3351/'],
+    },
+  },
+})
+
+
+export const rewardsChain = defineChain({
+  id: 37427,
+  name: 'Rewards Chain',
+  nativeCurrency: {
+    decimals: 18,
+    name: 'Ether',
+    symbol: 'ETH',
+  },
+  rpcUrls: {
+    default: {
+      http: ['http://localhost:3450/'],
+      webSocket: ['ws://localhost:3451/'],
     },
   },
 })

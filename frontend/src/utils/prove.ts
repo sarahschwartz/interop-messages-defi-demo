@@ -3,7 +3,7 @@ import { ethers } from "ethers";
 import { rewardsChain } from "../config/wagmi";
 import { GATEWAY_RPC, GW_CHAIN_ID, interopClient } from "../config/constants";
 
-const leaderboardProvider = new Provider(rewardsChain.rpcUrls.default.http[0]);
+const rewardsProvider = new Provider(rewardsChain.rpcUrls.default.http[0]);
   
 export async function checkIfTxIsFinalized(txHash: string, provider: Provider, timeoutMs = 220_000) {
 let status: "QUEUED" | "SENDING" | "PROVING" | "EXECUTED" | "FAILED" | "REJECTED" | "UNKNOWN" | {
@@ -36,7 +36,7 @@ export async function updateLocalChainInteropRoot(
 ): Promise<string> {
    const PRIVATE_KEY =
     "0x7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110";
-const wallet = new Wallet(PRIVATE_KEY, leaderboardProvider);
+const wallet = new Wallet(PRIVATE_KEY, rewardsProvider);
   const receipt = await (
     await srcProvider.getTransaction(txHash)
   ).waitFinalize();
@@ -77,7 +77,7 @@ export async function getProveScoreArgs(txHash: string, srcProvider: Provider){
   const args = await interopClient.getVerificationArgs({
     txHash: txHash as `0x${string}`,
     srcProvider: srcProvider, // source chain provider (to fetch proof + batch details)
-    targetChain: leaderboardProvider, // target chain provider (to read interop root + verify)
+    targetChain: rewardsProvider, // target chain provider (to read interop root + verify)
   });
   return args;
 }
