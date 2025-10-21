@@ -37,7 +37,7 @@ export default function DepositForm({
     <form onSubmit={handleSubmit} className="space-y-6">
       <div>
         <label htmlFor="deposit-amount" className="block text-sm font-medium text-purple-200 mb-2">
-          Amount (ETH)
+          Amount (ETH or base token)
         </label>
         <input
           id="deposit-amount"
@@ -69,7 +69,7 @@ export default function DepositForm({
         ) : (
           <>
             <Send className="h-5 w-5" />
-            <span>Deposit ETH</span>
+            <span>Deposit</span>
           </>
         )}
       </button>

@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from "react";
 import { useReadContracts } from "wagmi";
-import { rewardsChain, wagmiConfig } from "../config/wagmi";
+import { era, wagmiConfig } from "../config/wagmi";
 import TOKEN_JSON from "../../../contracts/artifacts/contracts/InteropToken.sol/InteropToken.json";
 import { TOKEN_CONTRACT_ADDRESS } from "../config/constants";
 import type { Abi } from "viem";
@@ -8,7 +8,7 @@ import type { Abi } from "viem";
 export function LeaderboardTable(
   { update }: { update: number }
 ) {
-  const chains = wagmiConfig.chains.filter(c => c.id !== rewardsChain.id);
+  const chains = wagmiConfig.chains.filter(c => c.id !== era.id);
   const { data, 
     refetch
    } = useReadContracts({
@@ -17,7 +17,7 @@ export function LeaderboardTable(
       abi: TOKEN_JSON.abi as Abi,
       address: TOKEN_CONTRACT_ADDRESS as `0x${string}`,
       functionName: "rewardsByChain",
-      chainId: rewardsChain.id,
+      chainId: era.id,
       args: [c.id],
     }))
   });

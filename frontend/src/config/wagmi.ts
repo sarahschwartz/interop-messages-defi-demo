@@ -1,10 +1,10 @@
 import { http, createConfig } from '@wagmi/core';
 import { defineChain } from 'viem';
-import { TOKEN_CONTRACT_ADDRESS, STAKING_CHAIN_1_CONTRACT_ADDRESS, STAKING_CHAIN_2_CONTRACT_ADDRESS } from './constants';
+import { TOKEN_CONTRACT_ADDRESS, ABSTRACT_CONTRACT_ADDRESS, LENS_CONTRACT_ADDRESS } from './constants';
 
-export const stakingChain1 = defineChain({
-  id: 34234,
-  name: 'Staking Chain 1',
+export const abstract = defineChain({
+  id: 11124,
+  name: 'Abstract Testnet',
   nativeCurrency: {
     decimals: 18,
     name: 'Ether',
@@ -12,32 +12,31 @@ export const stakingChain1 = defineChain({
   },
   rpcUrls: {
     default: {
-      http: ['http://localhost:3050/'],
-      webSocket: ['ws://localhost:3051/'],
+      http: ['https://api.testnet.abs.xyz'],
+      webSocket: ['wss://api.testnet.abs.xyz/ws'],
     },
   },
 })
 
-export const stakingChain2 = defineChain({
-  id: 5321,
-  name: 'Staking Chain 2',
+export const lens = defineChain({
+  id: 37111,
+  name: 'Lens Chain Testnet',
   nativeCurrency: {
     decimals: 18,
-    name: 'Ether',
-    symbol: 'ETH',
+    name: 'Grass',
+    symbol: 'GRASS',
   },
   rpcUrls: {
     default: {
-      http: ['http://localhost:3350/'],
-      webSocket: ['ws://localhost:3351/'],
+      http: ['https://rpc.testnet.lens.xyz']
     },
   },
 })
 
 
-export const rewardsChain = defineChain({
-  id: 37427,
-  name: 'Rewards Chain',
+export const era = defineChain({
+  id: 300,
+  name: 'ZKsync Era Sepolia',
   nativeCurrency: {
     decimals: 18,
     name: 'Ether',
@@ -45,18 +44,18 @@ export const rewardsChain = defineChain({
   },
   rpcUrls: {
     default: {
-      http: ['http://localhost:3450/'],
-      webSocket: ['ws://localhost:3451/'],
+      http: ['https://sepolia.era.zksync.dev'],
+      webSocket: ['wss://sepolia.era.zksync.dev/ws'],
     },
   },
 })
 
 export const wagmiConfig = createConfig({
-  chains: [rewardsChain, stakingChain1, stakingChain2],
+  chains: [era, abstract, lens],
   transports: {
-    [rewardsChain.id]: http(),
-    [stakingChain1.id]: http(),
-    [stakingChain2.id]: http(),
+    [era.id]: http(),
+    [abstract.id]: http(),
+    [lens.id]: http(),
   },
 });
 
@@ -66,14 +65,14 @@ export function getChainInfo(chainId: number){
 
 export function getContractAddress(chainId: number){
   switch(chainId){
-    case rewardsChain.id:
+    case era.id:
     return TOKEN_CONTRACT_ADDRESS;
     break;
-  case stakingChain1.id:
-    return STAKING_CHAIN_1_CONTRACT_ADDRESS;
+  case abstract.id:
+    return ABSTRACT_CONTRACT_ADDRESS;
     break;
-  case stakingChain2.id:
-    return STAKING_CHAIN_2_CONTRACT_ADDRESS;
+  case lens.id:
+    return LENS_CONTRACT_ADDRESS;
     break;
   default:
     return null;

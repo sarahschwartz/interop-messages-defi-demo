@@ -1,14 +1,16 @@
 import { buildModule } from "@nomicfoundation/hardhat-ignition/modules";
 
-const STAKING_CHAIN_1_CONTRACT_ADDRESS = "0x7A03C544695751Fe78FC75C6C1397e4601579B1f";
-const STAKING_CHAIN_2_CONTRACT_ADDRESS = "0xD75Bf167785EAe2197ef92637337259bfD16bDE9";
+const ABSTRACT_CONTRACT_ADDRESS = "0xeeaD0044812Cb4F4528fA69EF0aF7e154BeE507B";
+const LENS_CONTRACT_ADDRESS = "0x2D1Be6b6C0AD5CC09840e9B4Be253af15b3C3440";
+// const SOPHON_CONTRACT_ADDRESS = "0x";
 
-const STAKING_CHAIN_1_ID = "34234";
-const STAKING_CHAIN_2_ID = "5328";
+const ABSTRACT_CHAIN_ID = "11124";
+const LENS_CHAIN_ID = "37111";
+// const SOPHON_CHAIN_ID = "531050104";
 
 export default buildModule("InteropTokenModule", (m) => {
-  const approvedChainIds = [STAKING_CHAIN_1_ID, STAKING_CHAIN_2_ID];
-  const approvedStakingContracts = [STAKING_CHAIN_1_CONTRACT_ADDRESS, STAKING_CHAIN_2_CONTRACT_ADDRESS];
+  const approvedChainIds = [ABSTRACT_CHAIN_ID, LENS_CHAIN_ID];
+  const approvedStakingContracts = [ABSTRACT_CONTRACT_ADDRESS, LENS_CONTRACT_ADDRESS];
   console.log("Approved staking contracts:", approvedStakingContracts)
   const counter = m.contract("InteropToken", [approvedChainIds, approvedStakingContracts]);
 

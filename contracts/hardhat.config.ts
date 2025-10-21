@@ -29,29 +29,30 @@ const config: HardhatUserConfig = {
       type: "edr-simulated",
       chainType: "l1",
     },
-    rewardsChain: {
+    era: {
       type: "http",
-      url: "http://localhost:3450",
+      url: "https://sepolia.era.zksync.dev",
       chainType: "generic",
-      accounts: [configVariable("WALLET_PRIVATE_KEY")],
+      accounts: [configVariable("TESTNET_PRIVATE_KEY")],
     },
-    stakingChain1: {
+    sophon: {
       type: "http",
-      url: "http://localhost:3050",
+      url: "https://rpc.testnet.sophon.xyz",
       chainType: "generic",
-      accounts: [configVariable("WALLET_PRIVATE_KEY")],
+      accounts: [configVariable("SOPH_WALLET_PRIVATE_KEY")],
     },
-    stakingChain2: {
+    lens: {
       type: "http",
-      url: "http://localhost:3350",
+      url: "https://rpc.testnet.lens.xyz",
       chainType: "generic",
-      accounts: [configVariable("WALLET_PRIVATE_KEY")],
+      accounts: [configVariable("LENS_WALLET_PRIVATE_KEY")],
     },
-    zksyncGateway: {
+    abstract: {
       type: "http",
-      url: "http://localhost:3150",
+      url: "https://api.testnet.abs.xyz",
       chainType: "generic",
-    },
+      accounts: [configVariable("ABS_WALLET_PRIVATE_KEY")],
+    }
   },
 };
 

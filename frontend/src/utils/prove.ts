@@ -1,9 +1,9 @@
 import { Provider, utils, Contract, Wallet, getGwBlockForBatch } from "zksync-ethers";
 import { ethers } from "ethers";
-import { rewardsChain } from "../config/wagmi";
+import { era } from "../config/wagmi";
 import { GATEWAY_RPC, GW_CHAIN_ID, interopClient } from "../config/constants";
 
-const rewardsProvider = new Provider(rewardsChain.rpcUrls.default.http[0]);
+const rewardsProvider = new Provider(era.rpcUrls.default.http[0]);
   
 export async function checkIfTxIsFinalized(txHash: string, provider: Provider, timeoutMs = 220_000) {
 let status: "QUEUED" | "SENDING" | "PROVING" | "EXECUTED" | "FAILED" | "REJECTED" | "UNKNOWN" | {

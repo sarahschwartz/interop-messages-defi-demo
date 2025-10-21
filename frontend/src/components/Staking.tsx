@@ -46,7 +46,7 @@ export default function Staking({
           <h3 className="text-2xl font-bold text-white">Staking Deposit</h3>
         </div>
         <p className="text-purple-200 mb-6">
-          Deposit ETH to a staking contract
+          Deposit ETH (or a base token) to a staking contract
         </p>
         <DepositForm chainId={chainId} copy={copy} stakingContractAddress={stakingContractAddress} abi={abi} />
       </div>

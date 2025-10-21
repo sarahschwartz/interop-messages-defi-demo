@@ -3,7 +3,7 @@ import WalletConnect from './components/WalletConnect'
 import ChainSwitcher from './components/ChainSwitcher'
 import MintForm from './components/MintForm'
 import { Wallet, CircleDollarSign, Coins, Star } from 'lucide-react'
-import { rewardsChain } from './config/wagmi'
+import { era } from './config/wagmi'
 import { useState } from 'react'
 import { LeaderboardTable } from './components/LeaderboardTable'
 import Staking from './components/Staking'
@@ -66,7 +66,7 @@ function App() {
             </>
           ) : (
               <div className="grid max-w-[820px] gap-8 mx-auto my-20">
-                {chain.id !== rewardsChain.id ? (
+                {chain.id !== era.id ? (
                   <Staking chainId={chain.id} copy={copy}/>
                 ) : (
                   <>

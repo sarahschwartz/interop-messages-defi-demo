@@ -48,7 +48,7 @@ export default function WithdrawForm({
         ) : (
           <>
             <Send className="h-5 w-5" />
-            <span>Withdraw Staked ETH</span>
+            <span>Withdraw Staked Base Token</span>
           </>
         )}
       </button>

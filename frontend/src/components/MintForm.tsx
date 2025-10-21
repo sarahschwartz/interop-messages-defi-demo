@@ -8,9 +8,9 @@ import {
 import {
   getChainInfo,
   getContractAddress,
-  rewardsChain,
-  stakingChain1,
-  stakingChain2,
+  era,
+  abstract,
+  lens,
 } from "../config/wagmi";
 import { TOKEN_CONTRACT_ADDRESS } from "../config/constants";
 import { Coins, CheckCircle, XCircle } from "lucide-react";
@@ -30,7 +30,7 @@ export default function MintForm({
   update: Dispatch<SetStateAction<number>>;
 }) {
   const { address, chain } = useAccount();
-  const [chainId, setChainId] = useState<number>(stakingChain1.id);
+  const [chainId, setChainId] = useState<number>(abstract.id);
   const [txHash, setTxHash] = useState<string>("");
   const [isSubmitPending, setIsSubmitPending] = useState<boolean>(false);
   const [isFinalized, setIsFinalized] = useState<boolean>(false);
@@ -46,7 +46,7 @@ export default function MintForm({
     address: TOKEN_CONTRACT_ADDRESS,
     abi: TOKEN_JSON.abi as Abi,
     functionName: "addressesThatMinted",
-    chainId: rewardsChain.id,
+    chainId: era.id,
     args: [address],
   });
 
@@ -54,7 +54,7 @@ export default function MintForm({
     update((prev) => prev + 1);
   }, [isSuccess]);
 
-  const isCorrectChain = thisChainId === rewardsChain.id;
+  const isCorrectChain = thisChainId === era.id;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -100,7 +100,7 @@ export default function MintForm({
       <div className="text-center py-8">
         <XCircle className="h-12 w-12 text-red-400 mx-auto mb-4" />
         <p className="text-red-400 font-medium">
-          Please switch to {rewardsChain.name} to mint tokens
+          Please switch to {era.name} to mint tokens
         </p>
       </div>
     );
@@ -144,8 +144,8 @@ export default function MintForm({
             onChange={(e) => setChainId(Number(e.target.value))}
             className="flex items-center space-x-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl px-4 py-2 text-white hover:bg-white/20 transition-all duration-200"
           >
-            <option value={stakingChain1.id}>{stakingChain1.name}</option>
-            <option value={stakingChain2.id}>{stakingChain2.name}</option>
+            <option value={abstract.id}>{abstract.name}</option>
+            <option value={lens.id}>{lens.name}</option>
           </select>
         </div>
       )}
