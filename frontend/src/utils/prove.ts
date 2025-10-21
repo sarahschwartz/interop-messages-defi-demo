@@ -1,4 +1,4 @@
-import { Provider, utils, Contract, Wallet, getGwBlockForBatch } from "zksync-ethers";
+import { Provider, utils, getGwBlockForBatch, waitForGatewayInteropRoot } from "zksync-ethers";
 import { ethers } from "ethers";
 import { era } from "../config/wagmi";
 import { GATEWAY_RPC, GW_CHAIN_ID, interopClient } from "../config/constants";
@@ -26,17 +26,10 @@ let firstCheck = false;
   return status;
 }
 
-// for local testing only
-// forces interop root to update on local leaderboard chain by sending txns
-// for testnet or mainnet, use `waitForGatewayInteropRoot` method from `zksync-ethers`
-export async function updateLocalChainInteropRoot(
+export async function waitForChainInteropRoot(
   txHash: string,
-  srcProvider: Provider,
-  timeoutMs = 120_000
-): Promise<string> {
-   const PRIVATE_KEY =
-    "0x7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110";
-const wallet = new Wallet(PRIVATE_KEY, rewardsProvider);
+  srcProvider: Provider
+){
   const receipt = await (
     await srcProvider.getTransaction(txHash)
   ).waitFinalize();
@@ -47,30 +40,12 @@ const wallet = new Wallet(PRIVATE_KEY, rewardsProvider);
     gw
   );
 
-  // fetch the interop root from target chain
-  const InteropRootStorage = new Contract(
-    utils.L2_INTEROP_ROOT_STORAGE_ADDRESS,
-    utils.L2_INTEROP_ROOT_STORAGE_ABI,
-    wallet
-  );
-
-  const deadline = Date.now() + timeoutMs;
-  while (Date.now() < deadline) {
-    const root: string = await InteropRootStorage.interopRoots(
-      GW_CHAIN_ID,
-      gwBlock
+  const root = await waitForGatewayInteropRoot(GW_CHAIN_ID, rewardsProvider, gwBlock);
+  if(!root){
+    throw new Error(
+      `Rewards chain did not import interop root for (${GW_CHAIN_ID}, ${gwBlock}) in time`
     );
-    if (root && root !== "0x" + "0".repeat(64)) return root;
-    // send tx just to get chain2 to seal batch
-    const t = await wallet.sendTransaction({
-      to: wallet.address,
-      value: BigInt(1),
-    });
-    await (await wallet.provider.getTransaction(t.hash)).waitFinalize();
   }
-  throw new Error(
-    `Chain2 did not import interop root for (${GW_CHAIN_ID}, ${gwBlock}) in time`
-  );
 }
 
 export async function getProveScoreArgs(txHash: string, srcProvider: Provider){
