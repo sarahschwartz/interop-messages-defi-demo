@@ -139,7 +139,8 @@ export default function MintForm({
         )}
         {isRootUpdated && (
           <Status
-            isLoading={!isSuccess}
+            isLoading={!isSuccess && !isError}
+            isError={isError}
             text={
               isError
                 ? "Error minting token"
