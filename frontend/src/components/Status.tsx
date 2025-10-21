@@ -3,11 +3,16 @@ import Spinner from "./Spinner";
 export function Status({
   text,
   isLoading,
+  isError
 }: {
   text: string;
   isLoading?: boolean;
+  isError?: boolean;
 }) {
-  const color = "#87EDD0";
+  const GREEN = "#87EDD0";
+  const RED = "#e04141"
+
+  const color = isError ? RED : GREEN;
 
   return (
     <div
