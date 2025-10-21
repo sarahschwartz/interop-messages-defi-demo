@@ -20,7 +20,7 @@ import { Provider } from "zksync-ethers";
 import {
   checkIfTxIsFinalized,
   getProveScoreArgs,
-  updateLocalChainInteropRoot,
+  waitForChainInteropRoot,
 } from "../utils/prove";
 import { Status } from "./Status";
 
@@ -77,7 +77,7 @@ export default function MintForm({
       return;
     }
     setIsFinalized(true);
-    await updateLocalChainInteropRoot(txHash, provider);
+    await waitForChainInteropRoot(txHash, provider);
     setIsRootUpdated(true);
     const args = await getProveScoreArgs(txHash, provider);
 

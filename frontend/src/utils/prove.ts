@@ -29,7 +29,7 @@ let firstCheck = false;
 // for local testing only
 // forces interop root to update on local leaderboard chain by sending txns
 // for testnet or mainnet, use `waitForGatewayInteropRoot` method from `zksync-ethers`
-export async function updateLocalChainInteropRoot(
+export async function waitForChainInteropRoot(
   txHash: string,
   srcProvider: Provider,
   timeoutMs = 120_000
