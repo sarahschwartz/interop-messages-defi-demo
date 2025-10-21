@@ -20,7 +20,7 @@ import { Provider } from "zksync-ethers";
 import {
   checkIfTxIsFinalized,
   getProveScoreArgs,
-  updateLocalChainInteropRoot,
+  waitForChainInteropRoot,
 } from "../utils/prove";
 import { Status } from "./Status";
 
