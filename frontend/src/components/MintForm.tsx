@@ -10,7 +10,7 @@ import {
   getContractAddress,
   era,
   abstract,
-  lens,
+  sophon,
 } from "../config/wagmi";
 import { TOKEN_CONTRACT_ADDRESS } from "../config/constants";
 import { Coins, CheckCircle, XCircle } from "lucide-react";
@@ -145,7 +145,7 @@ export default function MintForm({
             className="flex items-center space-x-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl px-4 py-2 text-white hover:bg-white/20 transition-all duration-200"
           >
             <option value={abstract.id}>{abstract.name}</option>
-            <option value={lens.id}>{lens.name}</option>
+            <option value={sophon.id}>{sophon.name}</option>
           </select>
         </div>
       )}

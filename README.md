@@ -49,10 +49,6 @@ bun deploy:abstract
 ```
 
 ```bash
-bun deploy:lens
-```
-
-```bash
 bun deploy:sophon
 ```
 

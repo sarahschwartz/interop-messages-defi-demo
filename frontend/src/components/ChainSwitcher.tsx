@@ -1,6 +1,6 @@
 import React from "react";
 import { useAccount, useSwitchChain } from "wagmi";
-import { era, abstract, lens } from "../config/wagmi";
+import { era, abstract, sophon } from "../config/wagmi";
 import { Network, ChevronDown } from "lucide-react";
 
 export default function ChainSwitcher() {
@@ -9,7 +9,7 @@ export default function ChainSwitcher() {
   const [showChains, setShowChains] = React.useState(false);
   const chainId = chain?.id;
 
-  const allChains = [era, abstract, lens];
+  const allChains = [era, abstract, sophon];
   const currentChain = allChains.find((c) => c.id === chainId);
   const otherChains = allChains.filter((c) => c.id !== chainId);
 

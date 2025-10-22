@@ -5,7 +5,6 @@
   "scripts": {
     "compile": "hardhat compile",
     "deploy:abstract": "hardhat ignition deploy ignition/modules/Staking.ts --network abstract",
-    "deploy:lens": "hardhat ignition deploy ignition/modules/Staking.ts --network lens",
     "deploy:sophon": "hardhat ignition deploy ignition/modules/Staking.ts --network sophon",
     "deploy:token": "hardhat ignition deploy ignition/modules/InteropToken.ts --network era"
   },

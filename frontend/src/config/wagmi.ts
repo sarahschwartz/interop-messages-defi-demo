@@ -1,6 +1,6 @@
 import { http, createConfig } from '@wagmi/core';
 import { defineChain } from 'viem';
-import { TOKEN_CONTRACT_ADDRESS, ABSTRACT_CONTRACT_ADDRESS, LENS_CONTRACT_ADDRESS } from './constants';
+import { TOKEN_CONTRACT_ADDRESS, ABSTRACT_CONTRACT_ADDRESS, SOPHON_CONTRACT_ADDRESS } from './constants';
 
 export const abstract = defineChain({
   id: 11124,
@@ -18,17 +18,17 @@ export const abstract = defineChain({
   },
 })
 
-export const lens = defineChain({
-  id: 37111,
-  name: 'Lens Chain Testnet',
+export const sophon = defineChain({
+  id: 531050104,
+  name: 'Sophon Testnet',
   nativeCurrency: {
     decimals: 18,
-    name: 'Grass',
-    symbol: 'GRASS',
+    name: 'SOPH',
+    symbol: 'SOPH',
   },
   rpcUrls: {
     default: {
-      http: ['https://rpc.testnet.lens.xyz']
+      http: ['https://rpc.testnet.sophon.xyz'],
     },
   },
 })
@@ -51,11 +51,11 @@ export const era = defineChain({
 })
 
 export const wagmiConfig = createConfig({
-  chains: [era, abstract, lens],
+  chains: [era, abstract, sophon],
   transports: {
     [era.id]: http(),
     [abstract.id]: http(),
-    [lens.id]: http(),
+    [sophon.id]: http(),
   },
 });
 
@@ -71,8 +71,8 @@ export function getContractAddress(chainId: number){
   case abstract.id:
     return ABSTRACT_CONTRACT_ADDRESS;
     break;
-  case lens.id:
-    return LENS_CONTRACT_ADDRESS;
+  case sophon.id:
+    return SOPHON_CONTRACT_ADDRESS;
     break;
   default:
     return null;
